@@ -2,7 +2,9 @@ This is a fork of ChromiumOS's chromeos-3.14 kernel. It's aim is to provide a fu
 Since this will also be my personal kernel I'm adding the bfs, uksm and greysky's gcc optimization patches.
 
 To make a basic .config run 
+    ```sh
     $ ./chromeos/scripts/prepareconfig chromeos-intel-pineview
+    ```
 And then run make menuconfig or whatever you use to select the things you like.
 
 **Issues**
