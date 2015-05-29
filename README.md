@@ -1,5 +1,5 @@
 This is a fork of ChromiumOS's chromeos-3.14 kernel. It's aim is to provide a fully working kernel for a regular Linux install on the Chromebook Pixel 2.
-Since this will also be my personal kernel I'm adding the bfs, uksm and greysky's gcc optimization patches.
+Since this will also be my personal kernel I'm adding the bfs, uksm and graysky2's gcc optimization patches.
 
 To make a basic .config run 
 
