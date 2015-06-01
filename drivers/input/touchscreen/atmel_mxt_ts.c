@@ -1377,8 +1377,8 @@ static int mxt_proc_messages(struct mxt_data *data, u8 count, bool report)
 			const u8 *payload = &msg[1];
 			u8 status = payload[0];
 			data->config_csum = mxt_extract_T6_csum(&payload[1]);
-			dev_info(dev, "Status: %02x Config Checksum: %06x\n",
-				 status, data->config_csum);
+			//dev_info(dev, "Status: %02x Config Checksum: %06x\n",
+			//	 status, data->config_csum);
 			if (status == 0x00)
 				complete(&data->auto_cal_completion);
 		} else if (mxt_is_T9_message(data, reportid)) {
