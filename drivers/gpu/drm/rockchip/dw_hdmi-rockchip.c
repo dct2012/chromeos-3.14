@@ -46,6 +46,18 @@ static const struct dw_hdmi_mpll_config rockchip_mpll_cfg[] = {
 			{ 0x40f3, 0x0000}
 		},
 	}, {
+		28320000, {
+			{ 0x00b3, 0x0000},
+		},
+	}, {
+		30240000, {
+			{ 0x00b3, 0x0000}
+		},
+	}, {
+		31500000, {
+			{ 0x00b3, 0x0000}
+		},
+	}, {
 		36000000, {
 			{ 0x00b3, 0x0000},
 			{ 0x2153, 0x0000},
@@ -58,10 +70,22 @@ static const struct dw_hdmi_mpll_config rockchip_mpll_cfg[] = {
 			{ 0x40f3, 0x0000}
 		},
 	}, {
+		49500000, {
+			{ 0x0072, 0x0001}
+		},
+	}, {
+		50000000, {
+			{ 0x0072, 0x0001}
+		},
+	}, {
 		54000000, {
 			{ 0x0072, 0x0001},
 			{ 0x2142, 0x0001},
 			{ 0x40a2, 0x0001},
+		},
+	}, {
+		57280000, {
+			{ 0x0072, 0x0001}
 		},
 	}, {
 		65000000, {
@@ -76,14 +100,44 @@ static const struct dw_hdmi_mpll_config rockchip_mpll_cfg[] = {
 			{ 0x4061, 0x0002}
 		},
 	}, {
+		71000000, {
+			{ 0x0072, 0x0001}
+		},
+	}, {
+		73250000, {
+			{ 0x0072, 0x0001}
+		},
+	}, {
 		74250000, {
 			{ 0x0072, 0x0001},
 			{ 0x2145, 0x0002},
 			{ 0x4061, 0x0002}
 		},
 	}, {
+		75000000, {
+			{ 0x0072, 0x0001}
+		},
+	}, {
+		78750000, {
+			{ 0x0072, 0x0001}
+		},
+	}, {
 		83500000, {
 			{ 0x0072, 0x0001},
+		},
+	}, {
+		85500000, {
+			{ 0x0072, 0x0001},
+		},
+	}, {
+		88750000, {
+			{ 0x0072, 0x0001},
+		},
+	}, {
+		106500000, {
+			{ 0x0051, 0x0002},
+			{ 0x2145, 0x0002},
+			{ 0x4061, 0x0002}
 		},
 	}, {
 		108000000, {
@@ -92,10 +146,20 @@ static const struct dw_hdmi_mpll_config rockchip_mpll_cfg[] = {
 			{ 0x4061, 0x0002}
 		},
 	}, {
-		106500000, {
-			{ 0x0051, 0x0002},
-			{ 0x2145, 0x0002},
-			{ 0x4061, 0x0002}
+		115500000, {
+			{ 0x0051, 0x0002}
+		},
+	}, {
+		119000000, {
+			{ 0x0051, 0x0002}
+		},
+	}, {
+		135000000, {
+			{ 0x0051, 0x0002}
+		},
+	}, {
+		136750000, {
+			{ 0x0051, 0x0002}
 		},
 	}, {
 		146250000, {
@@ -108,6 +172,18 @@ static const struct dw_hdmi_mpll_config rockchip_mpll_cfg[] = {
 			{ 0x0051, 0x0003},
 			{ 0x214c, 0x0003},
 			{ 0x4064, 0x0003}
+		},
+	}, {
+		154000000, {
+			{ 0x0051, 0x0002},
+		},
+	}, {
+		162000000, {
+			{ 0x0051, 0x0002},
+		},
+	}, {
+		172800000, {
+			{ 0x0051, 0x0002},
 		},
 	}, {
 		~0UL, {
@@ -127,13 +203,9 @@ static const struct dw_hdmi_curr_ctrl rockchip_cur_ctr[] = {
 	}, {
 		66000000,  { 0x0038, 0x0038, 0x0038 },
 	}, {
-		74250000,  { 0x0028, 0x0038, 0x0038 },
+		88750000,  { 0x0028, 0x0038, 0x0038 },
 	}, {
-		83500000,  { 0x0028, 0x0038, 0x0038 },
-	}, {
-		146250000, { 0x0038, 0x0038, 0x0038 },
-	}, {
-		148500000, { 0x0000, 0x0038, 0x0038 },
+		172800000, { 0x0038, 0x0038, 0x0038 },
 	}, {
 		~0UL,      { 0x0000, 0x0000, 0x0000},
 	}
@@ -192,6 +264,23 @@ dw_hdmi_rockchip_encoder_mode_fixup(struct drm_encoder *encoder,
 				    const struct drm_display_mode *mode,
 				    struct drm_display_mode *adj_mode)
 {
+	/*
+	 * Hardware: Because we can not find an NPLL rate which have
+	 * generate both accurate 136.75MHz and good jitter performance,
+	 * we change dclk_vop0 to 136.80MHz, so dclk_vop0 could have good jitter
+	 * performance(118.790ps).  When we pick 136.80MHz clk driver could
+	 * choose the 1368MHz for us.  Normally the clock driver can't pick
+	 * clocks that are higher that we request.
+	 *
+	 * We adjust 146.25MHz for a similar reason.  If we don't adjust
+	 * then the clock framework will pick 585MHz which has bad jitter.
+	 * We instead specify 146.200MHz and will pick 1608MHz
+	 */
+	if (adj_mode->clock == 136750)
+		adj_mode->clock = 136800;
+	if (adj_mode->clock == 146250)
+		adj_mode->clock = 146200;
+
 	return true;
 }
 
